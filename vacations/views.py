@@ -52,6 +52,10 @@ class CreateVacationRequestView(View):
     template_name = 'vacations/create.html'
 
     def get(self, request):
+        if request.user.remain_date == 0:
+            messages.error(request, '남은 휴가일수가 없습니다 ㅠㅠ')
+            return redirect(request.META['HTTP_REFERER'])
+
         context = {
             'TYPE_CHOICES': VacationRequest.TYPE_CHOICES,
             'selected_menu': 'create_request',
