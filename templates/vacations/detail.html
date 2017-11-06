@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}휴가관리{% endblock %}
+
+{% block stylesheet %}
+  <style>
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form class="ui form" action="" method="POST" id="vacation_form" enctype="multipart/form-data">{% csrf_token %}
+    <div class="field">
+      <label>이름</label>
+      <input type="text" value="{{ vacation.user.name }}" readonly=""/>
+    </div>
+    <div class="field">
+      <label>휴가 종류</label>
+      <div class="ui selection dropdown">
+        <input type="hidden" name="type">
+        <i class="dropdown icon"></i>
+        <div class="default text">휴가 종류</div>
+        <div class="menu">
+          {% for type in TYPE_CHOICES %}
+            <div class="item" data-value="{{ type.0 }}">{{ type.1 }}</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="ui form">
+        <div class="two fields">
+          <div class="field">
+            <label>시작일</label>
+            <div class="ui calendar" id="rangestart">
+              <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input type="text" placeholder="시작일" name="start_date">
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>종료일</label>
+            <div class="ui calendar" id="rangeend">
+              <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input type="text" placeholder="종료일" name="end_date">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>사유</label>
+      <textarea rows="4"></textarea>
+    </div>
+    <div class="field">
+      <div class="ui action file input">
+        <label for="file">파일 열기</label>
+        <input type="file" id="file" name="docs_file">
+        <label for="file" class="ui icon button"><i class="attach icon"></i></label>
+      </div>
+    </div>
+    {% for message in messages %}
+      <div class="ui {{ message.tags }} message">
+        <div class="header"></div>
+        <p>{{ message }}</p>
+      </div>
+    {% endfor %}
+    <br/>
+    <button class="ui button" type="submit">신청하기</button>
+  </form>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+
+  </script>
+{% endblock %}

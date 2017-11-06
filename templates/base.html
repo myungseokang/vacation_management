@@ -1,0 +1,103 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no" name="viewport" />
+    <meta content="Semantic-UI-Forest, collection of design, themes and templates for Semantic-UI." name="description" />
+    <meta content="Semantic-UI, Theme, Design, Template" name="keywords" />
+    <meta content="PPType" name="author" />
+    <meta content="#ffffff" name="theme-color" />
+    <title>{% block title %}{% endblock %}</title>
+    <link href="{% static 'semantic/dist/semantic.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/default.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/pandoc-code-highlight.css' %}" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      body {
+        display: relative;
+      }
+
+      #sidebar {
+        position: fixed;
+        top: 51.8px;
+        left: 0;
+        bottom: 0;
+        width: 18%;
+        background-color: #f5f5f5;
+        padding: 0px;
+      }
+      #sidebar .ui.menu {
+        margin: 2em 0 0;
+        font-size: 16px;
+      }
+      #sidebar .ui.menu > a.item {
+        color: #337ab7;
+        border-radius: 0 !important;
+      }
+      #sidebar .ui.menu > a.item.active {
+        background-color: #337ab7;
+        color: white;
+        border: none !important;
+      }
+      #sidebar .ui.menu > a.item:hover {
+        background-color: #4f93ce;
+        color: white;
+      }
+
+      #content {
+        margin-left: 19%;
+        width: 80%;
+        margin-top: 3em;
+        padding-left: 3em;
+        float: left;
+      }
+      #content > .ui.grid {
+        padding-right: 4em;
+        padding-bottom: 3em;
+      }
+      #content h1 {
+        font-size: 36px;
+      }
+      #content .ui.divider:not(.hidden) {
+        margin: 0;
+      }
+      #content table.ui.table {
+        border: none;
+      }
+      #content table.ui.table thead th {
+        border-bottom: 2px solid #eee !important;
+      }
+    </style>
+    {% block stylesheet %}{% endblock %}
+  </head>
+  <body>
+    <div class="ui inverted huge borderless fixed fluid menu">
+      <a class="header item">OG</a>
+      <div class="right menu">
+        <a href="{% url 'users:logout' %}" class="item">Logout</a>
+      </div>
+    </div>
+    <div class="ui grid">
+      <div class="row">
+        <div class="column" id="sidebar">
+          <div class="ui secondary vertical fluid menu">
+            <a href="{% url 'vacations:unapproved_request_list' %}" class="item{% if selected_menu == 'unapproved_request_list' %} active{% endif %}">미승인 신청목록</a>
+            <a href="{% url 'vacations:request_history_list' %}" class="item{% if selected_menu == 'request_history_list' %} active{% endif %}">남은 휴가 및 신청내역 조회</a>
+            <a href="{% url 'vacations:create' %}" class="item{% if selected_menu == 'create_request' %} active{% endif %}">휴가 신청하기</a>
+            {% if request.user.is_team_leader %}
+              <a href="{% url 'vacations:todo_approve_list' %}" class="item{% if selected_menu == 'todo_approve_list' %} active{% endif %}">신청목록 승인하기</a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="column" id="content">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'semantic/dist/semantic.min.js' %}"></script>
+  {% block javascript %}{% endblock %}
+</html>

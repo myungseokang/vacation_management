@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}휴가관리{% endblock %}
+
+{% block content %}
+  <div class="ui grid">
+    {% for message in messages %}
+      <div class="ui {{ message.tags }} message">
+        <div class="header"></div>
+        <p>{{ message }}</p>
+      </div>
+    {% endfor %}
+    <div class="row">
+      <h1 class="ui huge header">
+        {{ team }} 신청목록
+      </h1>
+    </div>
+    <div class="ui divider"></div>
+    <div class="row">
+      <table class="ui single line striped selectable table">
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>종류</th>
+          <th>기간</th>
+          <th>신청자</th>
+          <th>신청일</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for vacation in vacation_list %}
+          <tr>
+            <td>{{ vacation.id }}</td>
+            <td>{{ vacation.get_type_display }}</td>
+            <td>{{ vacation.start_date|date:"Y년 m월 d일 H:i" }} ~ {{ vacation.end_date|date:"Y년 m월 d일 H:i" }}</td>
+            <td>{{ vacation.user.name }}</td>
+            <td>{{ vacation.created|date:"Y년 m월 d일 H:i:s" }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
