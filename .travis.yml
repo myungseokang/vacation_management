@@ -17,8 +17,8 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 install:
-  - docker-compose build
+  - pip install -r requirements.txt
 
 script:
-  - docker-compose -f docker-compose.yml run db &
-  - docker-compose -f docker-compose.yml run web python manage.py test
+  - python manage.py test
+  - docker-compose build
