@@ -2,7 +2,6 @@ sudo: required
 
 services:
   - docker
-  - postgresql
 
 env:
   - DOCKER_COMPOSE_VERSION=1.16.1 DJANGO_SETTINGS_MODULE=vacation_management.settings.test
