@@ -11,14 +11,17 @@
 
 ### 실행방법
 
+
 ```
-$ python manage.py migrate
+$ docker-compose up
+```
+
+
+```
+$ docker-compose up --build
 ```
 
 ```
-$ python manage.py createsuperuser
-```
-
-```
-$ python manage.py runserver
+# create superuser
+$ docker-compose -f docker-compose.yml run web python manage.py createsuperuser
 ```
