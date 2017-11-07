@@ -13,15 +13,17 @@
 
 
 ```
+# Run
 $ docker-compose up
 ```
 
 
 ```
+# Re-build
 $ docker-compose up --build
 ```
 
 ```
 # create superuser
-$ docker-compose -f docker-compose.yml run web python manage.py createsuperuser
+$ docker-compose -f docker-compose.yml run django python manage.py createsuperuser
 ```
