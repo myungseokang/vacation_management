@@ -20,4 +20,5 @@ install:
   - docker-compose build
 
 script:
+  - docker-compose -f docker-compose.yml run db &
   - docker-compose -f docker-compose.yml run web python manage.py test
