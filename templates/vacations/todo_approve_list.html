@@ -30,7 +30,9 @@
         <tbody>
         {% for vacation in vacation_list %}
           <tr>
-            <td>{{ vacation.id }}</td>
+            <td>
+              <a href="{% url 'vacations:detail' vacation.id %}">{{ vacation.id }}</a>
+            </td>
             <td>{{ vacation.get_type_display }}</td>
             <td>{{ vacation.start_date|date:"Y년 m월 d일 H:i" }} ~ {{ vacation.end_date|date:"Y년 m월 d일 H:i" }}</td>
             <td>{{ vacation.user.name }}</td>

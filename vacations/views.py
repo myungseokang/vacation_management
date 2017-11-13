@@ -69,6 +69,7 @@ class CreateVacationRequestView(View):
         start_date = datetime.strptime(start_date, '%Y-%m-%d %H:%M')
         end_date = request.POST.get('end_date', '')
         end_date = datetime.strptime(end_date, '%Y-%m-%d %H:%M')
+        reason = request.POST.get('reason', '')
         using_date = request.POST.get('using_date', '')
         docs_file = request.FILES.get('docs_file', '')
 
@@ -86,6 +87,7 @@ class CreateVacationRequestView(View):
                 type=vacation_type,
                 start_date=start_date,
                 end_date=end_date,
+                reason=reason,
                 using_date=using_date,
                 # docs_file=docs_file.file,
             )
@@ -126,3 +128,19 @@ class VacationRequestDetailView(View):
             'vacation': vacation,
         }
         return render(request, self.template_name, context)
+
+    def post(self, request, request_id):
+        vacation = get_object_or_404(VacationRequest, id=request_id)
+        # _approve 값을 가지면 승인 아니면 기각
+        approve = True if request.POST.get('_approve', False) else False
+
+        try:
+            if approve:
+                vacation.status = 1
+            else:
+                vacation.status = 2
+            vacation.approver = request.user.name
+            vacation.save(update_fields=['status', 'approver'])
+        except Exception as e:
+            messages.error(request, '휴가신청 상태를 변경하는 데 오류가 발생했습니다: {}'.format(str(e)))
+        return redirect('vacations:todo_approve_list')
