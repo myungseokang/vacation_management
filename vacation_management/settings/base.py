@@ -82,9 +82,9 @@ WSGI_APPLICATION = 'vacation_management.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
+        'NAME': 'vacation',
         'USER': 'postgres',
-        'HOST': 'postgres',
+        'HOST': 'localhost',
         'PORT': 5432,
     }
 }
