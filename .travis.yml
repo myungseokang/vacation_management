@@ -10,6 +10,7 @@ env:
 
 install:
   - pip install -r requirements.txt
+  - psql -c 'createdb database vacation;' -U postgres
   - python manage.py migrate --noinput
 
 script:
