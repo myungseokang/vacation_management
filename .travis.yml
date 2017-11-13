@@ -1,4 +1,6 @@
-sudo: required
+language: python
+python:
+  - "3.6"
 
 services:
   - postgres
@@ -8,7 +10,7 @@ env:
 
 install:
   - pip install -r requirements.txt
-  - python manage.py migrate
+  - python manage.py migrate --noinput
 
 script:
   - pytest
