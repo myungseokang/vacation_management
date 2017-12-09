@@ -1,10 +1,10 @@
-import os
 from django.db import models
 
 
 class VacationRequest(models.Model):
     user = models.ForeignKey(
         'users.User',
+        on_delete=None,
         related_name='vacation_request_set',
         related_query_name='vacation_request',
     )

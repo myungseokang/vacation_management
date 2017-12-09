@@ -1,5 +1,8 @@
 -r base.txt
 
-py==1.4.34
-pytest==3.2.3
+attrs==17.3.0
+py==1.5.2
+pluggy==0.6.0
+pytest==3.3.1
 pytest-django==3.1.2
+six==1.11.0

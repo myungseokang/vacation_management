@@ -20,8 +20,8 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^users/', include('users.urls', namespace='users')),
-    url(r'^vacations/', include('vacations.urls', namespace='vacations')),
+    url(r'^users/', include(('users.urls', 'users'), namespace='users')),
+    url(r'^vacations/', include(('vacations.urls', 'vacations'), namespace='vacations')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
