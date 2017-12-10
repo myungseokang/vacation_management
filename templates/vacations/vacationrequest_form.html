@@ -19,10 +19,11 @@
     <div class="field">
       <label>이름</label>
       <input type="text" value="{{ request.user.name }}" readonly=""/>
+      <input type="hidden" name="email" value="{{ request.user.email }}"/>
     </div>
     <div class="field">
       <label>휴가 종류</label>
-      <input type="text" value="{{ vacation.get_type_display }}" readonly=""/>
+      {{ form.type }}
     </div>
     <div class="field">
       <div class="ui form">
@@ -32,7 +33,7 @@
             <div class="ui calendar" id="rangestart">
               <div class="ui input left icon">
                 <i class="calendar icon"></i>
-                <input type="text" placeholder="시작일" name="start_date" value="{{ vacation.start_date|date:"Y-m-d H:i:s" }}" readonly="readonly">
+                {{ form.start_date }}
               </div>
             </div>
           </div>
@@ -41,7 +42,7 @@
             <div class="ui calendar" id="rangeend">
               <div class="ui input left icon">
                 <i class="calendar icon"></i>
-                <input type="text" placeholder="종료일" name="end_date" value="{{ vacation.end_date|date:"Y-m-d H:i:s" }}" readonly="readonly">
+                {{ form.end_date }}
               </div>
             </div>
           </div>
@@ -49,19 +50,13 @@
       </div>
     </div>
     <div class="field">
-      <label>사용일수</label>
-      <input type="text" value="{{ vacation.using_date }} 일" readonly=""/>
+      <label>사유</label>
+      {{ form.reason }}
     </div>
     <div class="field">
-      <label>사유</label>
-      <textarea rows="4" readonly="readonly">{{ vacation.reason }}</textarea>
+      <label>휴가신청서(.docx)</label>
+      {{ form.document }}
     </div>
-    {% if vacation.document %}
-      <div class="field">
-        <div class="ui action file input"><a href="{{ vacation.document.url }}">{{ vacation.document.name }}</a>
-        </div>
-      </div>
-    {% endif %}
     {% for message in messages %}
       <div class="ui {{ message.tags }} message">
         <div class="header"></div>
@@ -69,15 +64,54 @@
       </div>
     {% endfor %}
     <br/>
-    {% if request.user.is_team_leader %}
-      <button class="ui green button" type="submit" name="_approve">승인하기</button>
-      <button class="ui red button" type="submit">기각하기</button>
-    {% endif %}
+    <button class="ui button" type="submit">신청하기</button>
   </form>
 {% endblock %}
 
 {% block javascript %}
   <script>
+    $(function () {
+      var $vacation_form = $('#vacation_form'),
+          start_date = $('#rangestart'),
+          end_date = $('#rangeend'),
+          input_start_date = $('input[name="start_date"]'),
+          input_end_date = $('input[name="end_date"]');
 
+      start_date.calendar({
+        monthFirst: false,
+        ampm: false,
+        formatter: {
+          date: function (date, settings) {
+            if (!date) return '';
+            var day = date.getDate(),
+                month = date.getMonth() + 1,
+                year = date.getFullYear();
+
+            return year + '-' + month + '-' + day;
+          }
+        },
+        endCalendar: end_date
+      });
+
+      end_date.calendar({
+        monthFirst: false,
+        ampm: false,
+        formatter: {
+          date: function (date, settings) {
+            if (!date) return '';
+            var day = date.getDate(),
+                month = date.getMonth() + 1,
+                year = date.getFullYear();
+
+            return year + '-' + month + '-' + day;
+          }
+        },
+        startCalendar: start_date
+      });
+      
+      $vacation_form.submit(function (e) {
+
+      });
+    });
   </script>
 {% endblock %}

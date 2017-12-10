@@ -5,7 +5,7 @@ from django.views import View
 
 class LoginView(View):
     def get(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             redirect('vacations:index')
 
         return render(request, 'users/login.html')

@@ -1,13 +1,20 @@
 from datetime import datetime
+from wsgiref.util import FileWrapper
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.generic import CreateView
 
 from users.models import User
+from vacations.forms import VacationRequestForm
 from vacations.models import VacationRequest
+from vacations.utils import get_using_date
 
 
 @method_decorator(login_required, name='dispatch')
@@ -48,55 +55,15 @@ class UnapprovedVacationRequestView(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class CreateVacationRequestView(View):
-    template_name = 'vacations/create.html'
+class VacationRequestCreate(CreateView):
+    model = VacationRequest
+    success_url = reverse_lazy('vacations:unapproved_request_list')
+    form_class = VacationRequestForm
 
-    def get(self, request):
-        if request.user.remain_date == 0:
-            messages.error(request, '남은 휴가일수가 없습니다 ㅠㅠ')
-            return redirect(request.META['HTTP_REFERER'])
-
-        context = {
-            'TYPE_CHOICES': VacationRequest.TYPE_CHOICES,
-            'selected_menu': 'create_request',
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        email = request.POST.get('email', '')
-        vacation_type = request.POST.get('type', 0)
-        start_date = request.POST.get('start_date', '')
-        start_date = datetime.strptime(start_date, '%Y-%m-%d %H:%M')
-        end_date = request.POST.get('end_date', '')
-        end_date = datetime.strptime(end_date, '%Y-%m-%d %H:%M')
-        reason = request.POST.get('reason', '')
-        using_date = request.POST.get('using_date', '')
-        docs_file = request.FILES.get('docs_file', '')
-
-        user = get_object_or_404(
-            User,
-            email=email,
-        )
-
-        using_date = round((end_date - start_date).total_seconds() / 60 / 24 / 24, 1)
-        using_date = 1.0 if using_date == 0.9 else using_date
-
-        try:
-            VacationRequest.objects.create(
-                user=user,
-                type=vacation_type,
-                start_date=start_date,
-                end_date=end_date,
-                reason=reason,
-                using_date=using_date,
-                # docs_file=docs_file.file,
-            )
-
-            messages.success(request, '휴가를 성공적으로 신청했습니다.')
-        except Exception as e:
-            messages.error(request, '휴가를 신청하던 도중 오류가 발생했습니다.')
-
-        return redirect('vacations:unapproved_request_list')
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.using_date = get_using_date(form.instance.start_date, form.instance.end_date)
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name='dispatch')
