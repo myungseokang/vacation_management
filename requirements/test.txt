@@ -1,5 +1,4 @@
 -r base.txt
--r local.txt
 
 attrs==17.3.0
 py==1.5.2

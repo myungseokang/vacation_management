@@ -11,6 +11,7 @@ env:
 install:
   - export SECRET_KEY="test_key"
   - pip install -r requirements/test.txt
+  - pip install -r requirements/local.txt
   - psql -c 'create database vacation;' -U postgres
   - python manage.py migrate --noinput
 
