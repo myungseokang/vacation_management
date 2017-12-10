@@ -83,7 +83,6 @@
       <div class="row">
         <div class="column" id="sidebar">
           <div class="ui secondary vertical fluid menu">
-            <a href="{% url 'vacations:unapproved_request_list' %}" class="item{% if selected_menu == 'unapproved_request_list' %} active{% endif %}">미승인 신청목록</a>
             <a href="{% url 'vacations:request_history_list' %}" class="item{% if selected_menu == 'request_history_list' %} active{% endif %}">남은 휴가 및 신청내역 조회</a>
             <a href="{% url 'vacations:create' %}" class="item{% if selected_menu == 'create_request' %} active{% endif %}">휴가 신청하기</a>
             {% if request.user.is_team_leader %}

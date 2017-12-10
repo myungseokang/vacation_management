@@ -70,8 +70,8 @@
     {% endfor %}
     <br/>
     {% if request.user.is_team_leader %}
-      <button class="ui green button" type="submit" name="_approve">승인하기</button>
-      <button class="ui red button" type="submit">기각하기</button>
+      <input class="ui green button" type="submit" name="_approve" value="승인하기"/>
+      <input class="ui red button" type="submit" name="_decline" value="기각하기"/>
     {% endif %}
   </form>
 {% endblock %}

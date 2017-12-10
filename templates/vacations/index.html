@@ -11,6 +11,8 @@
     </div>
     <div class="ui divider"></div>
     <div class="row">
+    {% if request.user.is_team_leader %}
+    {% endif %}
     </div>
   </div>
 {% endblock %}

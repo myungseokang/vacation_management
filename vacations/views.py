@@ -1,10 +1,5 @@
-from datetime import datetime
-from wsgiref.util import FileWrapper
-
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -42,28 +37,20 @@ class VacationRequestHistoryListView(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class UnapprovedVacationRequestView(View):
-    template_name = 'vacations/unapproved_request_list.html'
-
-    def get(self, request):
-        queryset = VacationRequest.objects.filter(status=0)
-        context = {
-            'vacation_list': queryset,
-            'selected_menu': 'unapproved_request_list',
-        }
-        return render(request, self.template_name, context)
-
-
-@method_decorator(login_required, name='dispatch')
 class VacationRequestCreate(CreateView):
     model = VacationRequest
-    success_url = reverse_lazy('vacations:unapproved_request_list')
+    success_url = reverse_lazy('vacations:request_history_list')
     form_class = VacationRequestForm
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.using_date = get_using_date(form.instance.start_date, form.instance.end_date)
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['selected_menu'] = 'create_request'
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -78,8 +65,8 @@ class TodoApproveListView(View):
         )
         context = {
             'team': user.get_team_display(),
-            'selected_menu': 'todo_approve_list',
             'vacation_list': queryset,
+            'selected_menu': 'todo_approve_list',
         }
         return render(request, self.template_name, context)
 
