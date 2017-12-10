@@ -6,7 +6,7 @@ from django.views import View
 class LoginView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            redirect('vacations:index')
+            redirect('index')
 
         return render(request, 'users/login.html')
 
@@ -14,7 +14,7 @@ class LoginView(View):
         email = request.POST['email']
         password = request.POST['password']
         user = authenticate(email=email, password=password)
-        next_ = request.POST.get('next', 'vacations:index')
+        next_ = request.POST.get('next', 'index')
 
         if user is not None:
             auth_login(request, user)

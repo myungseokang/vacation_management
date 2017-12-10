@@ -69,7 +69,7 @@
       </div>
     {% endfor %}
     <br/>
-    {% if request.user.is_team_leader %}
+    {% if request.user.is_team_leader and vacation.status == 0 %}
       <input class="ui green button" type="submit" name="_approve" value="승인하기"/>
       <input class="ui red button" type="submit" name="_decline" value="기각하기"/>
     {% endif %}

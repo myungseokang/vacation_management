@@ -2,17 +2,6 @@
 
 {% block title %}휴가관리{% endblock %}
 
-{% block stylesheet %}
-  <style>
-  #remain_vacation {
-    font-size: 20px;
-    position: absolute;
-    top: 20px;
-    right: 45px;
-  }
-  </style>
-{% endblock %}
-
 {% block content %}
   <div class="ui grid">
     {% for message in messages %}
@@ -25,7 +14,6 @@
       <h1 class="ui huge header">
         신청내역 조회
       </h1>
-      <p id="remain_vacation">남은 휴가: {{ remain_vacation }} 일</p>
     </div>
     <div class="ui divider"></div>
     <div class="row">
@@ -41,7 +29,9 @@
         <tbody>
         {% for vacation in vacation_list %}
           <tr>
-            <td>{{ vacation.id }}</td>
+            <td>
+              <a href="{% url 'vacations:detail' vacation.id %}">{{ vacation.id }}</a>
+            </td>
             <td>{{ vacation.get_type_display }}</td>
             <td>{{ vacation.get_status_display }}</td>
             <td>{{ vacation.start_date|date:"Y년 m월 d일 H:i" }} ~ {{ vacation.end_date|date:"Y년 m월 d일 H:i" }}</td>

@@ -18,8 +18,11 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 
+from vacations.views import IndexView
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', IndexView.as_view(), name='index'),
     url(r'^users/', include(('users.urls', 'users'), namespace='users')),
     url(r'^vacations/', include(('vacations.urls', 'vacations'), namespace='vacations')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

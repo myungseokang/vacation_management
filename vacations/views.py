@@ -14,10 +14,16 @@ from vacations.utils import get_using_date
 
 @method_decorator(login_required, name='dispatch')
 class IndexView(View):
-    template_name = 'vacations/index.html'
+    template_name = 'index.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        context = {
+            'selected_menu': 'index',
+        }
+        if request.user.is_team_leader:
+            context['vacation_list'] = VacationRequest.objects.filter(status=0, user__team=request.user.team)
+
+        return render(request, self.template_name, context)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -30,7 +36,6 @@ class VacationRequestHistoryListView(View):
 
         context = {
             'vacation_list': queryset,
-            'remain_vacation': user.remain_date,
             'selected_menu': 'request_history_list',
         }
         return render(request, self.template_name, context)
@@ -72,6 +77,21 @@ class TodoApproveListView(View):
             'team': user.get_team_display(),
             'vacation_list': queryset,
             'selected_menu': 'todo_approve_list',
+        }
+        return render(request, self.template_name, context)
+
+
+@method_decorator(login_required, name='dispatch')
+class TeamAllRequestListView(View):
+    template_name = 'vacations/team_all_request_list.html'
+
+    def get(self, request):
+        team = request.user.team
+        queryset = VacationRequest.objects.filter(user__team=team)
+
+        context = {
+            'vacation_list': queryset,
+            'selected_menu': 'team_all_request_list',
         }
         return render(request, self.template_name, context)
 
