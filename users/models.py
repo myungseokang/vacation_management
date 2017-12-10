@@ -60,7 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         (6, '오퍼레이션'),
         (7, '세일즈'),
     )
-    remain_date = models.PositiveIntegerField('남은 일수', default=0)
+    remain_date = models.FloatField('남은 일수', default=0.0)
     team = models.PositiveSmallIntegerField('팀', choices=TEAM_CHOICES, default=0)
     is_team_leader = models.BooleanField('팀리더 여부', default=False)
     is_staff = models.BooleanField(

@@ -59,6 +59,7 @@ class TodoApproveListView(View):
 
     def get(self, request):
         user = get_object_or_404(User, email=request.user.email)
+        # TODO: is_team_leader 조회해서 권한 없으면 redirect
         queryset = VacationRequest.objects.filter(
             user__team=user.team,
             status=0,
@@ -84,7 +85,10 @@ class VacationRequestDetailView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, request_id):
-        vacation = get_object_or_404(VacationRequest, id=request_id)
+        vacation = get_object_or_404(
+            VacationRequest.objects.select_related('user'),
+            id=request_id
+        )
         # _approve 값을 가지면 승인 아니면 기각
         approve = True if request.POST.get('_approve', False) else False
 
@@ -94,7 +98,17 @@ class VacationRequestDetailView(View):
             else:
                 vacation.status = 2
             vacation.approver = request.user.name
+            if vacation.type == 0:
+                result_date = vacation.user.remain_date - vacation.using_date
+                if result_date < 0:
+                    messages.error(request, '사용일수가 남은 일수보다 높습니다.')
+                    raise Exception
+                else:
+                    vacation.user.remain_date = result_date
+
+                vacation.user.save(update_fields=['remain_date'])
+
             vacation.save(update_fields=['status', 'approver'])
         except Exception as e:
             messages.error(request, '휴가신청 상태를 변경하는 데 오류가 발생했습니다: {}'.format(str(e)))
-        return redirect('vacations:todo_approve_list')
+        return redirect('vacations:request_history_list')
