@@ -9,6 +9,7 @@ env:
   - DJANGO_SETTINGS_MODULE=vacation_management.settings.test
 
 install:
+  - export SECRET_KEY="test_key"
   - pip install -r requirements.txt
   - psql -c 'create database vacation;' -U postgres
   - python manage.py migrate --noinput
