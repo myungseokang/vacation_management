@@ -59,7 +59,11 @@ class TodoApproveListView(View):
 
     def get(self, request):
         user = get_object_or_404(User, email=request.user.email)
-        # TODO: is_team_leader 조회해서 권한 없으면 redirect
+
+        if not user.is_team_leader:
+            messages.error(request, '권한이 없습니다.')
+            redirect('vacations:request_history_list')
+
         queryset = VacationRequest.objects.filter(
             user__team=user.team,
             status=0,
